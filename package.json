@@ -1,0 +1,43 @@
+{
+  "name": "console_extension",
+  "version": "0.1.0",
+  "description": "A lib to add features to the console object.",
+  "main": "index.js",
+  "dependencies": {
+  },
+  "devDependencies": {
+    "chai": "3.5.0",
+    "chai-http": "^3.0.0",
+    "eslint": "^3.16.1",
+    "eslint-config-airbnb": "^14.1.0",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "^4.0.0",
+    "eslint-plugin-react": "^6.10.0",
+    "mocha": "3.0.1",
+    "sinon": "latest",
+    "nyc": "^10.1.2"
+  },
+  "engines": {
+    "node": "8.3.0",
+    "npm": "4.2.6"
+  },
+  "scripts": {
+    "lint": "eslint index.js --fix",
+    "test": "nyc mocha --reporter spec --recursive ./spec"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/madeinstefano/console_extension.git"
+  },
+  "keywords": [
+    "log",
+    "console",
+    "metric"
+  ],
+  "contributors": [
+    {
+      "name": "Stéfano Zanata",
+      "email": "contato@szanata.com"
+    }
+  ]
+}

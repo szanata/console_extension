@@ -1,0 +1,7 @@
+{
+  "lines": 100,
+  "check-coverage": true,
+  "reporter": [
+    "lcov"
+  ]
+}
