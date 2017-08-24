@@ -1,7 +1,7 @@
 {
   "name": "console_extension",
-  "version": "0.1.0",
-  "description": "A lib to add features to the console object.",
+  "version": "0.2.0",
+  "description": "A lib to change default default of the console object, in order to do extended logs.",
   "main": "index.js",
   "dependencies": {
   },
