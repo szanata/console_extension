@@ -6,6 +6,7 @@ describe( 'Metric spec', () => {
   let includesStub;
 
   before(() => {
+    process.env.NODE_ENV = 'development';
     includesStub = sinon.stub(String.prototype, 'includes').returns(false);
   });
 

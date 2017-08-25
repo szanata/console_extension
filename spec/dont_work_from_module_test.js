@@ -6,6 +6,7 @@ describe( 'Should behave normally if the call came from node module', () => {
   let includesStub;
 
   before(() => {
+    process.env.NODE_ENV = 'development';
     require( '../index' );
   });
 

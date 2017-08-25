@@ -32,6 +32,10 @@ Object.keys( methods ).forEach( key => {
   console[key] = new Proxy(console[key], {
     apply: function (target, thisArg, args = {}) {
 
+      if ( process.env.NODE_ENV === 'test' ) {
+        return;
+      }
+
       if ( wasCalledFromModule() ) {
         return target( ...args );
       }
