@@ -21,7 +21,7 @@ function getCallerFile() {
   Error.prepareStackTrace = ( error, stack ) => stack;
 
   const currentFile = err.stack.shift().getFileName();
-  const caller = err.stack.find( line => line !== currentFile );
+  const caller = err.stack.find( line => line.getFileName() !== currentFile );
 
   return caller.getFileName();
 }
