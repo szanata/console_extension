@@ -3,8 +3,7 @@
   "version": "0.3.0",
   "description": "A lib to change default default of the console object, in order to do extended logs.",
   "main": "index.js",
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "chai": "3.5.0",
     "chai-http": "^3.0.0",
