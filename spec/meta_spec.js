@@ -100,6 +100,18 @@ describe( 'Meta spec', () => {
       expect( args.type ).to.eql( 'log' );
     } );
 
+    it( 'Should accept more than one string argument', () => {
+      console.info('test', 'test2');
+      const args = JSON.parse( writeSpy.lastCall.args[0] );
+      expect( args.message ).to.eql( 'test test2' );
+    } );
+
+    it( 'Should accept more than one argument', () => {
+      console.info('test', JSON.stringify({name: 'Jon Doe'}));
+      const args = JSON.parse( writeSpy.lastCall.args[0] );
+      expect( args.message ).to.eql( 'test {"name":"Jon Doe"}' );
+    } );
+
     it( 'Should be "log" fro .error', () => {
       console.error();
       const args = JSON.parse( writeSpy.lastCall.args[0] );
