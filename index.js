@@ -1,6 +1,6 @@
 const os = require( 'os' );
 const util = require( 'util' );
-const stackTrace = require('stack-trace');
+const stackTrace = require( 'stack-trace' );
 
 const constantFields = {
   system: process.env.SYSTEM_NAME || 'Not defined',
@@ -18,7 +18,7 @@ const methods = {
 
 function getCallerFile() {
   const err = new Error();
-  const stack = stackTrace.parse(err)
+  const stack = stackTrace.parse( err );
   const currentFile = stack.shift().getFileName();
   const caller = stack.find( line => line.getFileName() !== currentFile );
 
@@ -31,16 +31,10 @@ function wasCalledFromModule() {
 }
 
 function buildFields( props, metaFields ) {
-  const updatedProps = Object.assign({}, props);
-  if(props.message instanceof Array) {
-    updatedProps.message = props.message.join(' ');
-  }
-  const fields = Object.assign( {}, updatedProps, constantFields, metaFields );
+  const fields = Object.assign( {}, props, constantFields, metaFields );
   fields.timestamp = new Date().toISOString();
   return fields;
 }
-
-const ready = Symbol( 'ready' );
 
 Object.keys( methods ).forEach( key => {
   console[key] = new Proxy( console[key], {
@@ -53,7 +47,9 @@ Object.keys( methods ).forEach( key => {
         return target( ...args );
       }
 
-      const props = ( args[0] && args[0].constructor.name === 'Object' ) ? args[0] : { message: args };
+      const props = ( args[0] && args[0].constructor.name === 'Object' ) ?
+        args[0] :
+        { message: args.join( ' ' ) };
       const fields = buildFields( props, methods[key] );
 
       process.stdout.write( `${util.format( JSON.stringify( fields ) )}\n` );
