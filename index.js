@@ -1,6 +1,5 @@
 const os = require( 'os' );
 const util = require( 'util' );
-const stackTrace = require( 'stack-trace' );
 
 const constantFields = {
   system: process.env.SYSTEM_NAME || 'Not defined',
@@ -16,18 +15,24 @@ const methods = {
   table: { type: 'metric' }
 };
 
-function getCallerFile() {
-  const err = new Error();
-  const stack = stackTrace.parse( err );
-  const currentFile = stack.shift().getFileName();
-  const caller = stack.find( line => line.getFileName() !== currentFile );
-
-  return caller.getFileName();
-}
-
 function wasCalledFromModule() {
-  const caller = getCallerFile();
-  return caller.includes( '/node_modules/' );
+  const stack = new Error().stack.split( '\n' ).slice( 1 )
+    .map( cs => {
+      const exp = cs.includes( '(' ) ? /.+\(([^:]+).*\)/ : /\s+at\s([^:]+).*/;
+      return cs.replace( exp, '$1' );
+    } ); // get only the path/file.js part of the stack trace
+
+  const ownProjectFolder = stack.shift().replace( /\/[^/]+$/, '' ); // remove file part
+
+  stack.slice().some( entry => {
+    if ( entry.includes( ownProjectFolder ) ) {
+      stack.shift();
+      return false;
+    }
+    return true;
+  } );
+
+  return stack[0] ? stack[0].includes( '/node_modules/' ) : true;
 }
 
 function buildFields( props, metaFields ) {
@@ -37,15 +42,24 @@ function buildFields( props, metaFields ) {
 }
 
 Object.keys( methods ).forEach( key => {
-  console[key] = new Proxy( console[key], {
-    apply( target, thisArg, args = {} ) {
-      if ( process.env.NODE_ENV === 'test' ) {
-        return;
-      }
+  let method;
+  const originalMethodKey = `[[native:${key}]]`;
 
-      if ( wasCalledFromModule() ) {
-        return target( ...args );
-      }
+  if ( console[originalMethodKey] ) { // eslint-disable-line no-console
+    method = console[originalMethodKey]; // eslint-disable-line no-console
+  } else {
+    method = console[key]; // eslint-disable-line no-console
+    // eslint-disable-next-line no-console
+    Reflect.defineProperty( console, originalMethodKey, { value: console[key] } );
+  }
+
+  console[key] = new Proxy( method, { // eslint-disable-line no-console
+    apply( target, thisArg, args = {} ) {
+      if ( process.env.NODE_ENV === 'test' ) { return; }
+
+
+      // eslint-disable-next-line consistent-return
+      if ( wasCalledFromModule() ) { return target( ...args ); }
 
       const props = ( args[0] && args[0].constructor.name === 'Object' ) ?
         args[0] :

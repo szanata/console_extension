@@ -3,30 +3,25 @@ const sinon = require( 'sinon' );
 
 describe( 'Metric spec', () => {
   let writeSpy;
-  let includesStub;
 
-  before(() => {
+  before( () => {
     process.env.NODE_ENV = 'development';
-    includesStub = sinon.stub(String.prototype, 'includes').returns(false);
+    writeSpy = sinon.spy( process.stdout, 'write' );
   });
 
-  beforeEach( () => {
-    writeSpy = sinon.spy( process.stdout, 'write' );
-  } );
-
   afterEach( () => {
-    writeSpy.restore();
-    delete require.cache[require.resolve( '../index' )];
+    writeSpy.reset();
+    delete require.cache[require.resolve( '../../index' )];
   } );
 
-  after(() => {
-    includesStub.restore();
+  after( () => {
+    writeSpy.restore();
   });
 
   it( 'Should merge props send as parameters', () => {
     const tags = [ 1, 2, 3 ];
 
-    require( '../index' );
+    require( '../../index' );
     console.table( { tags } );
 
     const args = JSON.parse( writeSpy.lastCall.args[0] );

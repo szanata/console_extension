@@ -1,35 +1,30 @@
 const expect = require( 'chai' ).expect;
 const sinon = require( 'sinon' );
 const os = require( 'os' );
+const path = '../../index';
 
 describe( 'Meta spec', () => {
   let writeSpy;
-  let includesStub;
 
   before(() => {
     process.env.NODE_ENV = 'development';
-    includesStub = sinon.stub(String.prototype, 'includes').returns(false);
+    writeSpy = sinon.spy( process.stdout, 'write' );
   });
 
-  beforeEach( () => {
-    writeSpy = sinon.spy( process.stdout, 'write' );
-  } );
-
   afterEach( () => {
-    writeSpy.restore();
-    delete require.cache[require.resolve( '../index' )];
+    writeSpy.reset();
+    delete require.cache[require.resolve( path )];
   } );
 
   after(() => {
-    delete require.cache[require.resolve( '../index' )];
-    includesStub.restore();
+    writeSpy.restore();
   });
 
   describe('Envinroment automatic variables', () => {
     before( () => {
       process.env.SYSTEM_NAME = 'foo';
       process.env.SERVICE_NAME = 'bar';
-      require( '../index' );
+      require( path );
     });
 
     after( () => {
@@ -52,7 +47,7 @@ describe( 'Meta spec', () => {
 
   it( 'Should use the "hostname" from the machine', () => {
     const hostnameStub = sinon.stub( os, 'hostname' ).returns( 'foo-bar' );
-    require( '../index' );
+    require( path );
     console.table();
 
     const args = JSON.parse( writeSpy.lastCall.args[0] );
@@ -62,7 +57,7 @@ describe( 'Meta spec', () => {
 
   it( 'Should add the "timestamp" as time now in ISO-8601', () => {
     const isoStub = sinon.stub( Date.prototype, 'toISOString' ).returns( 'iso-date' );
-    require( '../index' );
+    require( path );
     console.table();
 
     const args = JSON.parse( writeSpy.lastCall.args[0] );
@@ -73,7 +68,7 @@ describe( 'Meta spec', () => {
   describe('Type property', () => {
 
     before(() => {
-      require( '../index' );
+      require( path );
     });
 
     it( 'Should be "metric" for .table', () => {
@@ -122,7 +117,7 @@ describe( 'Meta spec', () => {
   it( 'Should merge props send as parameters', () => {
     const tags = [ 1, 2, 3 ];
 
-    require( '../index' );
+    require( path );
     console.table( { tags } );
 
     const args = JSON.parse( writeSpy.lastCall.args[0] );
@@ -137,7 +132,7 @@ describe( 'Meta spec', () => {
     const hostname = 'hostname';
     const system = 'system';
 
-    require( '../index' );
+    require( path );
     console.table( { type, timestamp, service, hostname, system } );
 
     const args = JSON.parse( writeSpy.lastCall.args[0] );

@@ -1,0 +1,11 @@
+{
+  "name": "fake_module",
+  "version": "0.0.1",
+  "description": "Foo...bar",
+  "main": "index.js",
+  "dependencies": { },
+  "engines": {
+    "node": "8.3.0",
+    "npm": "4.2.6"
+  }
+}

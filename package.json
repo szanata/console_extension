@@ -1,6 +1,6 @@
 {
   "name": "console_extension",
-  "version": "0.4.0",
+  "version": "1.0.0",
   "description": "A lib to change default default of the console object, in order to do extended logs.",
   "main": "index.js",
   "dependencies": {
@@ -16,15 +16,18 @@
     "eslint-plugin-react": "^6.10.0",
     "mocha": "3.0.1",
     "sinon": "latest",
-    "nyc": "^10.1.2"
+    "nyc": "^10.1.2",
+    "redis": "latest"
   },
   "engines": {
     "node": "8.3.0",
     "npm": "4.2.6"
   },
   "scripts": {
+    "install:console_extension": "mkdir -p ./node_modules/console_extension && cp ./index.js ./node_modules/console_extension/ && cp ./package.json ./node_modules/console_extension/",
+    "install:fake_module": "mkdir -p ./node_modules/fake_module && cp ./spec/fake_module/index.js ./node_modules/fake_module/ && cp ./spec/fake_module/package.json ./node_modules/fake_module/",
     "lint": "eslint index.js --fix",
-    "test": "nyc mocha --reporter spec --recursive ./spec"
+    "test": "npm run install:console_extension && npm run install:fake_module && nyc mocha --reporter spec --recursive ./spec/unit"
   },
   "repository": {
     "type": "git",
