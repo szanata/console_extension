@@ -20,8 +20,8 @@
     "redis": "latest"
   },
   "engines": {
-    "node": "8.3.0",
-    "npm": "4.2.6"
+    "node": ">=8.3.0",
+    "npm": ">=4.2.6"
   },
   "scripts": {
     "install:console_extension": "mkdir -p ./node_modules/console_extension && cp ./index.js ./node_modules/console_extension/ && cp ./package.json ./node_modules/console_extension/",
